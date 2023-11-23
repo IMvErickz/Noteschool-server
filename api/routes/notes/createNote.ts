@@ -15,14 +15,16 @@ export async function CreateNote(fastify: FastifyInstance) {
             id: z.string()
         })
 
-        const {id} = userId.parse(request.params)
+        const { id } = userId.parse(request.params)
 
         const { Title, description } = noteInfo.parse(request.body)
-        
+
+        let note
+
         if (!Title || !description) {
             console.log("Campos estão vazios")
         } else {
-            await prisma.notes.create({
+            note = await prisma.notes.create({
                 data: {
                     id: randomUUID(),
                     Title,
@@ -36,8 +38,8 @@ export async function CreateNote(fastify: FastifyInstance) {
             })
         }
 
-        
 
-        return response.status(201).send({message: "Sucesso"})
+
+        return { note }
     })
 }
