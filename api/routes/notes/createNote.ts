@@ -8,7 +8,8 @@ export async function CreateNote(fastify: FastifyInstance) {
 
         const noteInfo = z.object({
             Title: z.string(),
-            description: z.string()
+            description: z.string(),
+            idNote: z.string()
         })
 
         const userId = z.object({
@@ -17,7 +18,7 @@ export async function CreateNote(fastify: FastifyInstance) {
 
         const { id } = userId.parse(request.params)
 
-        const { Title, description } = noteInfo.parse(request.body)
+        const { Title, description, idNote } = noteInfo.parse(request.body)
 
         let note
 
@@ -26,7 +27,7 @@ export async function CreateNote(fastify: FastifyInstance) {
         } else {
             note = await prisma.notes.create({
                 data: {
-                    id: randomUUID(),
+                    id: idNote,
                     Title,
                     description,
                     User: {
